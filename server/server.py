@@ -1,8 +1,13 @@
+# some parameters you could modify
 PORT = 10000
-MAP_PATH = 'map_10.csv'
-WEIGHT_PATH = 'mask_rcnn_taco_0100.h5'
 CAPTION_SIZE = 8
 CAPTION_COLOR = 'w'
+BOX_STYLE = 'dashed'
+BOX_THICK = 2
+# you'd better not modify the configuration below
+MAP_PATH = 'map_10.csv'
+WEIGHT_PATH = 'mask_rcnn_taco_0100.h5'
+
 
 
 
@@ -131,8 +136,8 @@ def display_instances(image, boxes, masks, class_ids, class_names,
             continue
         y1, x1, y2, x2 = boxes[i]
         if show_bbox:
-            p = patches.Rectangle((x1, y1), x2 - x1, y2 - y1, linewidth=2,
-                                alpha=0.7, linestyle="dashed",
+            p = patches.Rectangle((x1, y1), x2 - x1, y2 - y1, linewidth=BOX_THICK,
+                                alpha=0.7, linestyle=BOX_STYLE,
                                 edgecolor=color, facecolor='none')
             ax.add_patch(p)
 
@@ -145,7 +150,7 @@ def display_instances(image, boxes, masks, class_ids, class_names,
             caption = "{} {:.3f}".format(label, score) if score else label
         else:
             caption = captions[i]
-        ax.text(x1, y1 + 8, caption,
+        ax.text(x1, y1 + CAPTION_SIZE, caption,
                 color=CAPTION_COLOR, size=CAPTION_SIZE, backgroundcolor="none")
 
         # Mask

@@ -41,3 +41,15 @@ First select the image file ,then click submit to recognize the image.
 
 And you will get the feedback like the one showed above.
 
+
+
+### 4) you could also customize the configuration
+in server.py
+```
+PORT = 10000                #you could modify the port to any one you like
+CAPTION_SIZE = 8            #you could also change the size of the caption
+CAPTION_COLOR = 'w'         #and the color of the caption
+BOX_STYLE = 'dashed'        #the style of the border of the box
+BOX_THICK = 2               #the border width of the box
+```
+
