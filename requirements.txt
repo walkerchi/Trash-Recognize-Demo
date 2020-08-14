@@ -1,0 +1,7 @@
+flask
+cv2
+numpy
+matplotlib
+skimage
+tensorflow
+keras

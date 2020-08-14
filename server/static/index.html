@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" >
+    <title>Document</title>
+    <style>
+        *{
+            margin:0px;
+            border: 0px;
+            cursor:default;
+        }
+        body{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        #main{
+            margin-top: 50px;
+            display:flex;
+            border-style: solid;
+            width:400px;
+            border-width: 2px;
+            border-radius: 5px;
+            border-color: black;
+            flex-direction:column;
+            justify-content:center;
+            align-items:center;
+        }
+        #main>button{
+            cursor:pointer;
+            width:200px;
+            height:30px;
+            margin:10px;
+            border-radius: 5px;
+            background-color: purple;
+            color:white;
+        }
+        .imgBox{
+            margin-top: 10px;
+            width:300px;
+            height:300px;
+            border-radius: 5px;
+        }
+        .imgBox>span{
+            display: block;
+            width:100%;
+            height: 100%;
+            text-align: center;
+            line-height:300px;
+        }
+        .imgUpload{
+            display:none;
+        }
+        .imgBuffer{
+            width:100%;
+            height:100%;
+            border-radius: 5px;
+            background-size:100% 100%;
+        }
+        .imgProcess{
+            margin-bottom: 10px;
+            width:300px;
+            height: 300px;
+            text-align: center;
+            line-height:300px;
+        }
+        .imgProcess>img{
+            width:100%;
+            height:100%;   
+        }
+    </style>
+</head>
+<body>
+    <div id='main'>
+        <div class='imgBox'>
+            <input id = 'imgUpload0' class='imgUpload' type=file >
+            <img class='imgBuffer'>
+            <span>select your img file</span>
+        </div>
+        <button id='submitImg'>submit</button>
+        <div class='imgProcess'>
+        </div>
+    </div>
+    <script src='https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js'></script>
+    <script>
+        $(document).ready(function(){
+            $('.imgUpload').click(function(event){
+                event.stopPropagation();
+            })
+            $('.imgBuffer').hide();
+        })
+
+        $('.imgBox').click(function(){
+            $(this).children('span').hide();
+            $('.imgBuffer').show();
+            $(this).children('.imgUpload')[0].click();
+            $('.imgUpload').on('change',function(){
+                let files = this.files;
+                let length = files.length;
+                $.each(files,function(key,value){
+                    let fileReader = new FileReader();
+                    let file = files[key];
+                    fileReader.onload = function(){
+                        if(key == 0){
+                            $('.imgBuffer').css('background-image','url('+this.result+')');
+                        }
+                        }
+                    fileReader.readAsDataURL(value);
+                })
+            })
+        })
+
+
+        $('#submitImg').click(function(){
+            $('.imgProcess').html('processing...');
+            let reader = new FileReader();
+            let files= $("#imgUpload0")[0].files;
+            if(files.length>0)
+            {
+                reader.readAsDataURL(files[0]);
+                reader.onload = function(){
+                    let img_data = this.result;
+                    $.ajax({
+                    type: "POST",
+                    url: "detect/file",
+                    data: { img: img_data },
+                    cache: false,
+                    success: function(data) {
+                        $('.imgProcess').html('<img src="'+data.img+'">');
+                    },
+                    error: function(XMLHttpRequest, textStatus, errorThrown) {
+                        alter('error')
+                    }
+                    });
+                }
+            }
+            else{
+                alter('choose a file first');
+            }
+        })
+        
+
+
+
+    </script>
+</body>
+</html>
+
+
+
